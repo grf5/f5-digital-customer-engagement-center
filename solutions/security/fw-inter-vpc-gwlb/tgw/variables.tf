@@ -8,3 +8,12 @@ variable "projectPrefix" {
 variable "resourceOwner" {
   default = "elsa"
 }
+variable "awsRegion" {
+  default = "us-east-2"
+}
+variable "awsAz1" {
+  default = null
+}
+variable "awsAz2" {
+  default = null
+}

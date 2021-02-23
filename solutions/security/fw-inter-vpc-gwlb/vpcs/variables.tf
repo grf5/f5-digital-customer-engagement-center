@@ -11,6 +11,9 @@ variable "resourceOwner" {
 variable "awsRegion" {
   default = "us-east-2"
 }
+variable "sshPublicKey" {
+  default = null
+}
 variable "awsAz1" {
   default = null
 }

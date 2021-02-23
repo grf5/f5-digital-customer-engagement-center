@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-west-2"
+  region = var.awsRegion
 }
 
 data "terraform_remote_state" "vpcs" {
@@ -14,7 +14,9 @@ locals {
   securityVpcId            = data.terraform_remote_state.vpcs.outputs.securityVpc.vpc_id
   securityPrivateSubnets   = data.terraform_remote_state.vpcs.outputs.securityVpc.private_subnets
   spoke10VpcId             = data.terraform_remote_state.vpcs.outputs.spoke10Vpc.vpc_id
-  spoke20IntraSubnets    = data.terraform_remote_state.vpcs.outputs.spoke10Vpc.intra_subnets  
+  spoke10IntraSubnets      = data.terraform_remote_state.vpcs.outputs.spoke10Vpc.intra_subnets  
+  spoke20VpcId             = data.terraform_remote_state.vpcs.outputs.spoke20Vpc.vpc_id
+  spoke20IntraSubnets      = data.terraform_remote_state.vpcs.outputs.spoke20Vpc.intra_subnets  
 }
 
 # See Notes in README.md for explanation regarding using data-sources and computed values
@@ -50,7 +52,10 @@ module "tgw" {
     },
     spoke10Vpc = {
       vpc_id     = local.spoke10VpcId      # module.vpc2.vpc_id
-      subnet_ids = local.spoke20IntraSubnets # module.vpc2.private_subnets
+      subnet_ids = local.spoke10IntraSubnets # module.vpc2.private_subnets
+      dns_support                                     = true
+      #transit_gateway_default_route_table_association = false
+      #transit_gateway_default_route_table_propagation = false
 
       tgw_routes = [
         {
