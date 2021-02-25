@@ -389,7 +389,7 @@ resource "aws_key_pair" "deployer" {
 }
 
 module "gwlb-bigip" {
-  source              = "../../../../modules/aws/terraform/gwlb-geneve-proxy-vpc"
+  source              = "../../../../modules/aws/terraform/gwlb-bigip-vpc"
   projectPrefix       = var.projectPrefix
   resourceOwner       = var.resourceOwner
   keyName             = aws_key_pair.deployer.id
@@ -486,18 +486,92 @@ resource "aws_route_table_association" "TgwAttachmentSubnetAz2RtbAssociation" {
   subnet_id      = aws_subnet.securityVpcSubnetTgwAttachmentAz2.id
   route_table_id = aws_route_table.rtTgwAttachmentSubnetAz2.id
 }
-###############OUTPUT
 
-output "spoke10Vpc" {
-  value = module.spoke10Vpc
-}
 
-output "spoke20Vpc" {
-  value = module.spoke20Vpc
-}
-output "internetVpc" {
-  value = aws_vpc.internetVpc.id
+
+#########Compute 
+#local for spinning up compute resources 
+locals {
+
+  vpcs = {
+
+  internetVpcData = {
+    vpcId    = aws_vpc.internetVpc.id
+    subnetId = aws_subnet.subnetInternetJumphostAz1.id
   }
-output "subnetInternetJumphostAz1" {
-  value = aws_subnet.subnetInternetJumphostAz1.id
+
+  spoke10VpcData = {
+    vpcId    = module.spoke10Vpc.vpc_id
+    subnetId = module.spoke10Vpc.database_subnets[0]
+  }
+  spoke20VpcData = {
+    vpcId    = module.spoke20Vpc.vpc_id
+    subnetId = module.spoke20Vpc.database_subnets[0]
+  }
+
+  }
+
+}
+
+resource "aws_security_group" "secGroupWorkstation" {
+  for_each    = local.vpcs
+  name        = "secGroupWorkstation"
+  description = "Jumphost workstation security group"
+  vpc_id      = each.value["vpcId"]
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 5800
+    to_port     = 5800
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name  = "${var.projectPrefix}-secGroupWorkstation"
+    Owner = var.resourceOwner
+  }
+}
+
+
+module "jumphost" {
+  for_each    = local.vpcs
+  source        = "../../../../modules/aws/terraform/workstation/"
+  projectPrefix = var.projectPrefix
+  resourceOwner = var.resourceOwner
+  vpc           = each.value["vpcId"]
+  keyName       = aws_key_pair.deployer.id
+  mgmtSubnet    = each.value["subnetId"]
+  securityGroup = aws_security_group.secGroupWorkstation[each.key].id
+  associateEIP  = each.key == "internetVpcData" ? true : false
+}
+###############OUTPUT
+output "jumphostPublicIp" {
+  value = module.jumphost[*]
+}
+output "bigipPublicIp" {
+  value = module.gwlb-bigip.bigipAz1Ip
+}
+output "bigipPassword" {
+  value = module.gwlb-bigip.bigipPassword
 }

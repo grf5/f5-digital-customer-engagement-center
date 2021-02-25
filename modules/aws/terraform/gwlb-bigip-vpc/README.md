@@ -32,8 +32,7 @@ No requirements.
 | Name | Version |
 |------|---------|
 | aws | n/a |
-| null | n/a |
-| random | n/a |
+| template | n/a |
 
 ## Inputs
 
@@ -58,8 +57,9 @@ No requirements.
 
 | Name | Description |
 |------|-------------|
-| bigipAz1Ip | n/a |
-| gwlbEndpointService | output "bigipAz2Ip" { value = aws\_instance.GeneveProxyAz2.public\_ip } |
+| geneveProxyAz1Ip | n/a |
+| geneveProxyAz2Ip | n/a |
+| gwlbEndpointService | n/a |
 | subnetsAz1 | n/a |
 | subnetsAz2 | n/a |
 | vpcs | n/a |
