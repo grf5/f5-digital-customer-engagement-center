@@ -11,7 +11,6 @@ ingress-egress and inter-vpc firewall in AWS using AFM and GWLB
 ```bash
 export AWS_ACCESS_KEY_ID="dfsafsa"
 export AWS_SECRET_ACCESS_KEY="fdsafds"
-export AWS_SESSION_TOKEN="kgnfdskg"
 ```
 
 create the vars file and update it with your settings
@@ -29,12 +28,21 @@ run the setup script to deploy all of the components into your AWS account (reme
 
 ## Available features
 
-using your ssh key, connect to the UbuntuJumpHost
+using your ssh key, connect to the Internet Vpc Jumphost - internetVpcData (workspaceManagementAddress)
+
 ```bash
 ssh ubuntu@x.y.z.p
 ```
 
-connect to the two inspection devices and check that you can see the ssh traffic between you and the jumphost
+connect to BIGIP, install the required version and complete the setup:
+
+1. Configure a Geneve tunnel
+2. Create a 'fake_self_ip' 10.131.0.1/24, assign it to the tunnel interface
+3. Create a static arp entry to 10.131.0.2 ff:ff:ff:ff:ff:ff
+4. Create a pool with 10.131.0.2 as the member
+5. Configure a virtual server performance L4, transparent virtual server, assign the pool from previous step.
+6. Configure AFM on the virtual server
+
 ## Requirements
 
 No requirements.

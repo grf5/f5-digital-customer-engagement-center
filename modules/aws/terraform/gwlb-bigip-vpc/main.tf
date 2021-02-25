@@ -47,7 +47,7 @@ resource "aws_subnet" "vpcGwlbSubPubB" {
 }
 
 resource "aws_subnet" "subnetGwlbeAz1" {
-  count = var.createGwlbEndpoint ? 1 : 0
+  count             = var.createGwlbEndpoint ? 1 : 0
   vpc_id            = aws_vpc.vpcGwlb.id
   cidr_block        = var.subnetGwlbeAz1
   availability_zone = local.awsAz1
@@ -59,7 +59,7 @@ resource "aws_subnet" "subnetGwlbeAz1" {
 }
 
 resource "aws_subnet" "subnetGwlbeAz2" {
-  count = var.createGwlbEndpoint ? 1 : 0
+  count             = var.createGwlbEndpoint ? 1 : 0
   vpc_id            = aws_vpc.vpcGwlb.id
   cidr_block        = var.subnetGwlbeAz2
   availability_zone = local.awsAz2
@@ -161,7 +161,7 @@ resource "aws_lb_listener" "gwlbListener" {
 }
 
 resource "aws_vpc_endpoint" "vpcGwlbeAz1" {
-  count = var.createGwlbEndpoint ? 1 : 0
+  count             = var.createGwlbEndpoint ? 1 : 0
   service_name      = aws_vpc_endpoint_service.gwlbEndpointService.service_name
   subnet_ids        = [aws_subnet.subnetGwlbeAz1[0].id]
   vpc_endpoint_type = "GatewayLoadBalancer"
@@ -169,7 +169,7 @@ resource "aws_vpc_endpoint" "vpcGwlbeAz1" {
 }
 
 resource "aws_vpc_endpoint" "vpcGwlbeAz2" {
-  count = var.createGwlbEndpoint ? 1 : 0
+  count             = var.createGwlbEndpoint ? 1 : 0
   service_name      = aws_vpc_endpoint_service.gwlbEndpointService.service_name
   subnet_ids        = [aws_subnet.subnetGwlbeAz2[0].id]
   vpc_endpoint_type = "GatewayLoadBalancer"
@@ -275,82 +275,9 @@ module "mgmt-network-security-group" {
 
 }
 
-
-#data "aws_ami" "ubuntu" {
-#  most_recent = true
-#
-#  filter {
-#    name   = "name"
-#    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
-#  }
-#
-#  filter {
-#    name   = "virtualization-type"
-#    values = ["hvm"]
-#  }
-#
-#  owners = ["099720109477"] # Canonical
-#}
-#
-## bash script template
-#data "template_file" "onboard" {
-#  template = file("${path.module}/files/onboard.sh")
-#  vars = {
-#    repositories = var.repositories
-#  }
-#}
-#
-#data "template_cloudinit_config" "GeneveProxy" {
-#  gzip          = true
-#  base64_encode = true
-#
-#  # Main cloud-config configuration file.
-#  part {
-#    filename     = "init.cfg"
-#    content_type = "text/cloud-config"
-#    content      = file("${path.module}/files/cloud-config-base.yaml")
-#  }
-#  part {
-#    content_type = "text/x-shellscript"
-#    content      = data.template_file.onboard.rendered
-#  }
-#
-#}
-
-#resource "aws_instance" "GeneveProxyAz1" {
-#  ami                         = data.aws_ami.ubuntu.id
-#  user_data                   = data.template_cloudinit_config.GeneveProxy.rendered
-#  instance_type               = "t3.large"
-#  subnet_id                   = aws_subnet.vpcGwlbSubPubA.id
-#  vpc_security_group_ids      = [module.mgmt-network-security-group.this_security_group_id]
-#  key_name                    = var.keyName
-#  associate_public_ip_address = true
-#
-#  tags = {
-#    Name  = "${var.projectPrefix}-GeneveProxyAz1-${var.buildSuffix}"
-#    Owner = var.resourceOwner
-#  }
-#}
-#
-#resource "aws_instance" "GeneveProxyAz2" {
-#  ami                         = data.aws_ami.ubuntu.id
-#  user_data                   = data.template_cloudinit_config.GeneveProxy.rendered
-#  instance_type               = "t3.large"
-#  subnet_id                   = aws_subnet.vpcGwlbSubPubB.id
-#  vpc_security_group_ids      = [module.mgmt-network-security-group.this_security_group_id]
-#  key_name                    = var.keyName
-#  associate_public_ip_address = true
-#
-#  tags = {
-#    Name  = "${var.projectPrefix}-GeneveProxyAz2-${var.buildSuffix}"
-#    Owner = var.resourceOwner
-#  }
-#}
-
-
 # Create BIG-IP
 
-module bigipAz1 {
+module "bigipAz1" {
   source       = "../terraform-aws-bigip-module"
   prefix       = format("%s-1nic", var.projectPrefix)
   ec2_key_name = var.keyName

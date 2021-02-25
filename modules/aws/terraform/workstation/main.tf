@@ -38,7 +38,7 @@ resource "aws_network_interface" "mgmtNic" {
 }
 # public address
 resource "aws_eip" "mgmtEip" {
-  count = var.associateEIP ? 1 : 0
+  count             = var.associateEIP ? 1 : 0
   vpc               = true
   network_interface = aws_network_interface.mgmtNic.id
   tags = {
@@ -47,7 +47,7 @@ resource "aws_eip" "mgmtEip" {
   }
 }
 resource "aws_eip_association" "mgmtEipAssoc" {
-  count = var.associateEIP ? 1 : 0
+  count         = var.associateEIP ? 1 : 0
   instance_id   = aws_instance.workstation.id
   allocation_id = aws_eip.mgmtEip[0].id
 }

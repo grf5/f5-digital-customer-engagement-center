@@ -1,12 +1,12 @@
 Nginx - Kubernetes Ingress Controller | Lab setup
 ----------------------------------------------
 
-.. important:: You are responsible for the correct storing and protection of private keys and credentials that are used in the lab. 
+.. important:: You are responsible for the correct storing and protection of private keys and credentials that are used in the lab.
 
 
 1.  Complete the steps in the Getting started page. the following instructions will be perfromed on the dev container terminal
 
-    
+
 2.  Set your AWS credentials as environment variables
 
 
@@ -16,7 +16,7 @@ Nginx - Kubernetes Ingress Controller | Lab setup
    export AWS_SECRET_ACCESS_KEY="Your_access_secret_key"
 
 
-3.  Open the solution directory in the terminal 
+3.  Open the solution directory in the terminal
 
 
 .. code-block:: bash
@@ -53,9 +53,3 @@ Variable Name   Variable Value
 
 
 #
-
-
-
-
-
-

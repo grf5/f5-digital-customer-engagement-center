@@ -1,7 +1,7 @@
-Nginx - Kubernetes Ingress Controller 
+Nginx - Kubernetes Ingress Controller
 ----------------------------------------------
 
-Welcome to the Nginx KIC lab 
+Welcome to the Nginx KIC lab
 
 
 

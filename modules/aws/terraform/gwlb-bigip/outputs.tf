@@ -9,11 +9,11 @@ locals {
 
 output "gwlbeAz1" {
   description = "Id of the GWLB endpoint in AZ1"
-  value = aws_vpc_endpoint.vpcGwlbeAz1[0].id
+  value       = aws_vpc_endpoint.vpcGwlbeAz1[0].id
 }
 output "gwlbeAz2" {
   description = "Id of the GWLB endpoint in AZ2"
-  value = aws_vpc_endpoint.vpcGwlbeAz2[0].id
+  value       = aws_vpc_endpoint.vpcGwlbeAz2[0].id
 }
 output "subnetGwlbeAz1" {
   value = aws_subnet.subnetGwlbeAz1[0].id

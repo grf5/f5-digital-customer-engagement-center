@@ -41,7 +41,7 @@ resource "aws_subnet" "subnetPubAz2" {
 }
 
 resource "aws_subnet" "subnetGwlbeAz1" {
-  count = var.createGwlbEndpoint ? 1 : 0
+  count             = var.createGwlbEndpoint ? 1 : 0
   vpc_id            = var.vpcId
   cidr_block        = var.subnetGwlbeAz1
   availability_zone = local.awsAz1
@@ -53,7 +53,7 @@ resource "aws_subnet" "subnetGwlbeAz1" {
 }
 
 resource "aws_subnet" "subnetGwlbeAz2" {
-  count = var.createGwlbEndpoint ? 1 : 0
+  count             = var.createGwlbEndpoint ? 1 : 0
   vpc_id            = var.vpcId
   cidr_block        = var.subnetGwlbeAz2
   availability_zone = local.awsAz2
@@ -122,7 +122,7 @@ resource "aws_lb_listener" "gwlbListener" {
 }
 
 resource "aws_vpc_endpoint" "vpcGwlbeAz1" {
-  count = var.createGwlbEndpoint ? 1 : 0
+  count             = var.createGwlbEndpoint ? 1 : 0
   service_name      = aws_vpc_endpoint_service.gwlbEndpointService.service_name
   subnet_ids        = [aws_subnet.subnetGwlbeAz1[0].id]
   vpc_endpoint_type = "GatewayLoadBalancer"
@@ -130,7 +130,7 @@ resource "aws_vpc_endpoint" "vpcGwlbeAz1" {
 }
 
 resource "aws_vpc_endpoint" "vpcGwlbeAz2" {
-  count = var.createGwlbEndpoint ? 1 : 0
+  count             = var.createGwlbEndpoint ? 1 : 0
   service_name      = aws_vpc_endpoint_service.gwlbEndpointService.service_name
   subnet_ids        = [aws_subnet.subnetGwlbeAz2[0].id]
   vpc_endpoint_type = "GatewayLoadBalancer"

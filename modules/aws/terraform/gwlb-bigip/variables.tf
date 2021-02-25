@@ -54,8 +54,8 @@ variable "subnetGwlbeAz2" {
   default = "10.252.154.0/24"
 }
 variable "createGwlbEndpoint" {
-  default = false
-  type    = bool
+  default     = false
+  type        = bool
   description = "Controls the creation of gwlb endpoints in the provided vpc, if true creates subnets and endpoints"
 }
 variable "repositories" {
