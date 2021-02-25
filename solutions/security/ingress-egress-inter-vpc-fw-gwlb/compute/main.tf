@@ -15,9 +15,8 @@ locals {
   vpcs = {
 
   securityVpcData = {
-    vpcId    = data.terraform_remote_state.vpcs.outputs.securityVpc.vpc_id
-    #subnetId = data.terraform_remote_state.vpcs.outputs.securityVpc.public_subnets[0]
-    subnetId = data.terraform_remote_state.vpcs.outputs.securityVpcSubnetJumphostAz1
+    vpcId    = data.terraform_remote_state.vpcs.outputs.internetVpc
+    subnetId = data.terraform_remote_state.vpcs.outputs.subnetInternetJumphostAz1
   }
   spoke10VpcData = {
     vpcId    = data.terraform_remote_state.vpcs.outputs.spoke10Vpc.vpc_id

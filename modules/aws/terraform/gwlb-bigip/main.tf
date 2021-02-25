@@ -64,45 +64,7 @@ resource "aws_subnet" "subnetGwlbeAz2" {
   }
 }
 
-resource "aws_route_table" "GwlbeAz1Rt" {
-  count = var.createGwlbEndpoint ? 1 : 0
-  vpc_id = var.vpcId
 
-  route {
-    cidr_block      = "0.0.0.0/0"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcGwlbeAz1[0].id
-  }
-
-  tags = {
-    Name  = "${var.projectPrefix}-GwlbeAz1Rt-${var.buildSuffix}"
-    Owner = var.resourceOwner
-  }
-}
-
-resource "aws_route_table_association" "GwlbeAz1RtAssociation" {
-  subnet_id      = aws_subnet.subnetGwlbeAz1[0].id
-  route_table_id = aws_route_table.GwlbeAz1Rt[0].id
-}
-
-resource "aws_route_table" "GwlbeAz2Rt" {
-  count = var.createGwlbEndpoint ? 1 : 0
-  vpc_id = var.vpcId
-
-  route {
-    cidr_block      = "0.0.0.0/0"
-    vpc_endpoint_id = aws_vpc_endpoint.vpcGwlbeAz2[0].id
-  }
-
-  tags = {
-    Name  = "${var.projectPrefix}-GwlbeAz2Rt-${var.buildSuffix}"
-    Owner = var.resourceOwner
-  }
-}
-
-resource "aws_route_table_association" "GwlbeAz2RtAssociation" {
-  subnet_id      = aws_subnet.subnetGwlbeAz2[0].id
-  route_table_id = aws_route_table.GwlbeAz2Rt[0].id
-}
 
 ##################GWLB#################
 
@@ -140,10 +102,10 @@ resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachmentAz1" {
   target_id        = aws_instance.GeneveProxyAz1.private_ip
 }
 
-resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachmentAz2" {
-  target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
-  target_id        = aws_instance.GeneveProxyAz2.private_ip
-}
+#resource "aws_lb_target_group_attachment" "bigipTargetGroupAttachmentAz2" {
+#  target_group_arn = aws_lb_target_group.bigipTargetGroup.arn
+#  target_id        = aws_instance.GeneveProxyAz2.private_ip
+#}
 
 resource "aws_vpc_endpoint_service" "gwlbEndpointService" {
   acceptance_required        = false

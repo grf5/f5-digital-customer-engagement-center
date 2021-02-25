@@ -46,6 +46,31 @@ resource "aws_subnet" "vpcGwlbSubPubB" {
   }
 }
 
+resource "aws_subnet" "subnetGwlbeAz1" {
+  count = var.createGwlbEndpoint ? 1 : 0
+  vpc_id            = aws_vpc.vpcGwlb.id
+  cidr_block        = var.subnetGwlbeAz1
+  availability_zone = local.awsAz1
+
+  tags = {
+    Name  = "${var.projectPrefix}-subnetGwlbeAz1-${var.buildSuffix}"
+    Owner = var.resourceOwner
+  }
+}
+
+resource "aws_subnet" "subnetGwlbeAz2" {
+  count = var.createGwlbEndpoint ? 1 : 0
+  vpc_id            = aws_vpc.vpcGwlb.id
+  cidr_block        = var.subnetGwlbeAz2
+  availability_zone = local.awsAz2
+
+  tags = {
+    Name  = "${var.projectPrefix}-subnetGwlbeAz2-${var.buildSuffix}"
+    Owner = var.resourceOwner
+  }
+}
+
+
 # Internet Gateway
 
 resource "aws_internet_gateway" "vpcGwlbIgw" {
@@ -135,6 +160,21 @@ resource "aws_lb_listener" "gwlbListener" {
   }
 }
 
+resource "aws_vpc_endpoint" "vpcGwlbeAz1" {
+  count = var.createGwlbEndpoint ? 1 : 0
+  service_name      = aws_vpc_endpoint_service.gwlbEndpointService.service_name
+  subnet_ids        = [aws_subnet.subnetGwlbeAz1[0].id]
+  vpc_endpoint_type = "GatewayLoadBalancer"
+  vpc_id            = aws_vpc.vpcGwlb.id
+}
+
+resource "aws_vpc_endpoint" "vpcGwlbeAz2" {
+  count = var.createGwlbEndpoint ? 1 : 0
+  service_name      = aws_vpc_endpoint_service.gwlbEndpointService.service_name
+  subnet_ids        = [aws_subnet.subnetGwlbeAz2[0].id]
+  vpc_endpoint_type = "GatewayLoadBalancer"
+  vpc_id            = aws_vpc.vpcGwlb.id
+}
 ##########BIGIP################
 #
 #
